@@ -95,7 +95,7 @@ analytics:
 # Site Author
 author:
   name             : "C3r34lK1ll3r"
-  avatar           : "/images/avatar.png"
+  avatar           : "/assets/images/avatar.png"
   bio              : "Wannabe security researcher. Really interested in bugs, kernel, RE, and a lot more."
   location         : "Italy"
   email            : "andrea.ferraris@protonmail.com"

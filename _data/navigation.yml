@@ -1,9 +1,7 @@
 main:
-  - title: "Posts"
-    url: /posts/
   - title: "Categories"
     url: /categories/
-  - title: "Tags"
-    url: /tags/
+  - title: "My code"
+    url: "https://github.com/c3r34lk1ll3r"
   - title: "About"
     url: /about/

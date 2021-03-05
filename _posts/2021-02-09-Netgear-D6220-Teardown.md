@@ -96,12 +96,12 @@ soldering nice points. I'm not a hardware expert (this is my real-world experime
 be interesting to look closely at that PINs.
 
 
-{% include figure image_path="/images/netgear/serial.jpg" alt="Board" caption="In the red circle 
+{% include figure image_path="/assets/images/netgear/serial.jpg" alt="Board" caption="In the red circle 
 I soldered four PIN in order to connect to that port" %}
 
 So, we can easily resolder the PIN and see what happens there (sorry but I’d think to take a photo without the soldered PIN).
 
-{% include figure image_path="/images/netgear/serial_2.jpg" caption="PIN zoomed" %}
+{% include figure image_path="/assets/images/netgear/serial_2.jpg" caption="PIN zoomed" %}
 
 Indeed, as you can see, I'm very bad at soldering but using a tester we can check that, at least, 
 there is no short-circuit and try to understand how that PINs are connected to the board.
@@ -116,7 +116,7 @@ connections.
 
 Now that we have found a _GND_ and we have a stable point of connection, we can check the signals with a _logic analyzer_.
 
-{% include figure image_path="/images/netgear/pin_bread.jpg" caption="Connection of the board to a breadboard" %}
+{% include figure image_path="/assets/images/netgear/pin_bread.jpg" caption="Connection of the board to a breadboard" %}
 
 ## Logic Analyzer
 Now we should _listen_ if there are some signals in those PINs. We can do it using a _logic analyzer_
@@ -125,7 +125,7 @@ that ["is an electronic instrument that captures and displays multiple signals f
 I have a "[Saleae Logic 8](https://www.saleae.com/)" but there are [others cheaper device](https://www.sparkfun.com/products/15033) that
 can work on this device.
 
-{% include figure image_path="/images/netgear/salea.jpg" caption="Saleae connected to PIN throught the breadboard" %}
+{% include figure image_path="/assets/images/netgear/salea.jpg" caption="Saleae connected to PIN throught the breadboard" %}
 
 We can connect the _GND_ signal of the logic analyzer to `PIN1` and the signal channel to other PINs.
 
@@ -142,13 +142,13 @@ I count as the `PIN0` the farthest to the edge of the board.
 
 Using the _saleae software_, we can start our analysis by reading the _analogic value_.
 
-{% include figure image_path="/images/netgear/analog_start1.png" caption="There are a lot of traffics in channel 0" %}
+{% include figure image_path="/assets/images/netgear/analog_start1.png" caption="There are a lot of traffics in channel 0" %}
 
 As we can see, there are a lot of traffics on `PIN0` (channel 0, the upper) meanwhile the others are steady. 
 Now, we can switch to capture data in _digital_ (to be honest, I don't know if passing by the analog phase is useful
 but I'd like to think that more information I get is better).
 
-{% include figure image_path="/images/netgear/s_digital.png" caption="Now we have digital data" %}
+{% include figure image_path="/assets/images/netgear/s_digital.png" caption="Now we have digital data" %}
 
 The logic analyzer has an amazing feature: the __protocol decoder__. 
 
@@ -165,7 +165,7 @@ One of the most common baud rate is 115200.
 
 With 115200 we decode everything! And we obtain ASCII data, which seems like a bootloader.
 
-{% include figure image_path="/images/netgear/s_decoded.png" caption="The decoder is able to reconstruct the frame" %}
+{% include figure image_path="/assets/images/netgear/s_decoded.png" caption="The decoder is able to reconstruct the frame" %}
 
 We can update our pins table:
 
@@ -194,7 +194,7 @@ The pin-out of the board is:
 We know how to connect `MISO` pin, but for `MOSI`? We have only two pins free so we can try with the
 first one (`PIN2`).
 
-{% include figure image_path="/images/netgear/bus_pirate.jpg" caption="Connection of the Bus Pirate" %}
+{% include figure image_path="/assets/images/netgear/bus_pirate.jpg" caption="Connection of the Bus Pirate" %}
 
 We can connect with bus pirate using `screen` (or other terminals).
 
@@ -203,26 +203,26 @@ sudo screen /dev/ttyUSB0 115200
 ```
 The bus pirate needs to be correctly set before using it.
 
-{% include figure image_path="/images/netgear/bus_pirate1.png" %}
+{% include figure image_path="/assets/images/netgear/bus_pirate1.png" %}
 
 We can leave the other settings to the default value (we should use the same settings as the 
 logic analyzer used to decode the signal).
 
 Now that we have correctly configured the bus, we can set the _correct mode_ and power on the device.
 
-{% include figure image_path="/images/netgear/bus_pirate2.png" %}
+{% include figure image_path="/assets/images/netgear/bus_pirate2.png" %}
 
 ## Console
 As soon as we power on the device, we will see the bootloader and the kernel power up!
 
-{% include figure image_path="/images/netgear/bootloader.png" %}
+{% include figure image_path="/assets/images/netgear/bootloader.png" %}
 
 We can try to hit some enter in order to check if the `MOSI` is correct: if our data is echoed out we 
 have a fully bidirectional console port!
 
 After the boot, the firmware will land on a _busybox_ shell, and our privilege? `admin` of course!
 
-{% include figure image_path="/images/netgear/win.png" %}
+{% include figure image_path="/assets/images/netgear/win.png" %}
 
 
 # Getting the passwords
@@ -235,12 +235,12 @@ and if we look in the filesystem, we can find an amazing binary: `nvram`.
 This software allows us to extract data from the NVRAM extremely easily... So, now it is incredibly simple
 to extract the HTTP password. As simple as: `./nvram show http`
 
-{% include figure image_path="/images/netgear/http_password.png" caption="And now we have http user and password" %}
+{% include figure image_path="/assets/images/netgear/http_password.png" caption="And now we have http user and password" %}
 
 So we win! But we can do a step further: the ADSL credentials. 
 
 
-{% include figure image_path="/images/netgear/adsl_password.png" caption="And now we have http user and password" %}
+{% include figure image_path="/assets/images/netgear/adsl_password.png" caption="And now we have http user and password" %}
 
 # Conclusion
 We have obtained the password using an hardware attack, because the serial port is left opened
